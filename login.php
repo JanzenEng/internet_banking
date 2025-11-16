@@ -17,16 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
-    
-        if ($password === $row['password_hash']) {
-            $_SESSION['user_id'] = $row['user_id'];
-            $_SESSION['full_name'] = $row['full_name'];
 
+        if (password_verify($password, $row['password_hash'])) {
+            $_SESSION['user_id']   = $row['user_id'];
+            $_SESSION['full_name'] = $row['full_name'];
+    
             header("Location: account_overview.php");
             exit();
         } else {
             $error = "Invalid username or password.";
         }
+    
     } else {
         $error = "Invalid username or password.";
     }
