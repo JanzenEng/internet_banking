@@ -145,6 +145,10 @@ $txns = $stmt2->get_result();
         <p><strong>Account Number:</strong> <?php echo htmlspecialchars($account['account_number']); ?></p>
         <p><strong>Current Balance:</strong> RM <?php echo number_format($account['balance'], 2); ?></p>
         <a class="btn-back" href="account_overview.php">&laquo; Back to Account Overview</a>
+        <!--<a class="btn" href="statement.php?account_id=<?php echo $account['account_id']; ?>">
+    Download Statement-->
+</a>
+
     </div>
 
     <?php if ($txns->num_rows === 0) { ?>

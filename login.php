@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
-    $sql = "SELECT user_id, username, password_hash, full_name 
+    $sql = "SELECT user_id, username, password_hash, full_name, must_change_password
             FROM users 
             WHERE username = ?";
     $stmt = $conn->prepare($sql);
@@ -21,13 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($password, $row['password_hash'])) {
             $_SESSION['user_id']   = $row['user_id'];
             $_SESSION['full_name'] = $row['full_name'];
-    
-            header("Location: account_overview.php");
+
+            if ((int)$row['must_change_password'] === 1) {
+                header("Location: change_password.php");
+            } else {
+                header("Location: account_overview.php");
+            }
             exit();
+
         } else {
             $error = "Invalid username or password.";
         }
-    
+
     } else {
         $error = "Invalid username or password.";
     }
@@ -66,6 +71,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 4px;
         }
         .error { color: red; margin-top: 10px; text-align:center; }
+        .forgot {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .forgot a {
+            font-size: 13px;
+            text-decoration: none;
+            color: #737CA1;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <button type="submit" class="btn">Login</button>
     </form>
+
+    <div class="forgot">
+        <a href="forgot_password.php">Forgot your password?</a>
+    </div>
 </div>
 </body>
 </html>
